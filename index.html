@@ -86,8 +86,7 @@
                 }
             }
             
-            renderTasks()
-            addbutton.addEventListener("click", () => {
+            function putTask() {
                 const todotext = todoinput.value.trim()
                 if (todotext === '') {
                     return
@@ -96,7 +95,17 @@
                 tasks.push({id: Date.now(), text: todotext, completed: false})
                 saveTasks()
                 renderTasks()
+            }
 
+            renderTasks()
+            addbutton.addEventListener("click", () => {
+                putTask()
+            })
+
+            todoinput.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    putTask()
+                }
             })
 
         </script>
