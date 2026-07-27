@@ -1,0 +1,76 @@
+body {
+    background-color: beige;
+}
+
+h1 {
+    color: rgb(104, 84, 47);
+    text-align: left;
+    text-decoration-thickness: 200px;
+}
+
+.task {
+    padding: 10px;
+    margin: 10px 0;
+    width: fit-content;
+    background-color: #e8d6bb;
+    font-family: sans-serif;
+    border-radius: 8px;
+}
+
+.delbutton {
+    background-color: beige;
+    border-radius: 5px;
+    text-align: center;
+    transition: 0.7s;
+}
+
+.tickbutton {
+    background-color: beige;
+    border-radius: 5px;
+    text-align: center;
+    transition: 0.7s;
+}
+
+.tickbutton:hover {
+    background-color: #c1ff71;
+    scale: 1.05;
+}
+
+.delbutton:hover {
+    background-color: #ff664b;
+    scale: 1.05;
+}
+
+#addbutton {
+    background-color: #e4e4e4;
+    padding: 3px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.tickbutton,
+.delbutton {
+    cursor: pointer;
+    padding: 6px 9px;
+    border: 2px solid #777;
+}
+
+#todoinput {
+    padding: 5px;
+    margin: 10px 0;
+    width: fit-content;
+    background-color: #e8d6bb;
+    font-family: sans-serif;
+    border-radius: 8px;
+}
+
+.task-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-row p {
+    /* width: fit-content; */
+    margin: 5px 0;
+}
