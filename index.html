@@ -12,14 +12,16 @@
             <input type="text" id="todoinput">
             <input type="date" id="datePicker">
             <button id="addbutton">Add</button>
-            <!-- <label for="filter">Show:</label>
-
-            <select id="filter">
-                <option value="all">All</option>
-                <option value="doing">Doing</option>
-                <option value="completed">Completed</option>
-            </select> -->
-            
+                <select id="sort" class="dropdown">
+                    <option value="createdAt">Date Created</option>
+                    <option value="dueDate">Due Date</option>
+                    <option value="test">test</option>
+                </select>
+                <select id="sort-order" class="dropdown">
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                    <option value="test">test</option>
+                </select>
         </div>
         
         <div id="categories">
@@ -43,6 +45,9 @@
             const doing = document.getElementById("doing")
             const completed = document.getElementById("completed")
             const datePicker = document.getElementById("datePicker")
+            const sorter = document.getElementById("sort")
+            const sorterorder = document.getElementById("sort-order")
+            let order = 1
 
             function saveTasks() {
                 localStorage.setItem("tasks", JSON.stringify(tasks))
@@ -51,8 +56,28 @@
             function renderTasks() {
                 doing.innerHTML = ""
                 completed.innerHTML = ""
+                const sortby = sorter.value
+                if (sortby === 'createdAt') {
+                    tasks.sort((a, b) => { //make completed sorts in completedAt
+                        if (a.createdAt >= b.createdAt) {
+                            return 1*order
+                        } else {
+                            return -1*order
+                        }
+                    })
+                } else if (sortby === 'dueDate') {
+                    tasks.sort((a, b) => {
+                        if (!a.dueDate) return 1*order
+                        if (!b.dueDate) return -1*order
+
+                        return a.dueDate.localeCompare(b.dueDate)*order
+                    })
+                }
 
                 for (const task of tasks) {
+                    if (sortby === 'dueDate' && !task.dueDate) {
+                        continue
+                    }
                     const newElement = document.createElement("p")
                     newElement.textContent = task.text
                     // newElement.draggable = true
@@ -75,6 +100,7 @@
                             renderTasks()
                         })
                     } else {
+                        
                         const newTickButton = document.createElement("button")
                         newTickButton.textContent = '✓'
                         newTickButton.className = 'tickbutton'
@@ -100,13 +126,14 @@
             function putTask() {
                 let todotext = todoinput.value.trim()
                 const dueDate = datePicker.value
+                if (todotext === '') {
+                    return
+                }
                 if (dueDate) {
                     todotext = `${todotext}, Due:${dueDate}` //make dueDate appear only when rendering dont assign to text
                 }
                 
-                if (todotext === '') {
-                    return
-                }
+
                 todoinput.value = ''
                 tasks.push({id: crypto.randomUUID(), createdAt: Date.now(), dueDate:dueDate, text: todotext, completed: false})
                 saveTasks()
@@ -122,6 +149,19 @@
                 if (event.key === "Enter") {
                     putTask()
                 }
+            })
+
+            sorter.addEventListener("change", () => {
+                renderTasks()
+            })
+
+            sorterorder.addEventListener("change", () => { 
+                if (sorterorder.value === 'ascending') {
+                    order = 1
+                } else if (sorterorder.value === 'descending') {
+                    order = -1
+                }
+                renderTasks()
             })
         </script>
     </div>
