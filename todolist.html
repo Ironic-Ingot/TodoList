@@ -4,93 +4,101 @@
     <title>Todo List</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
-<body>
-    <h1>Todo List</h1>
-
-    <input type="text" id="todoinput">
-    <button id="addbutton">Add</button>
-    <div id="tasks">
-        <h2>Doing</h2>
-        <div id="doing"></div>
-        <h2>Completed</h2>
-        <div id="completed"></div>
-    </div>
-    
-
-    <script>
-        let tasks = JSON.parse(localStorage.getItem("tasks")) || []
-
-        // document.body.style.backgroundColor = "beige"
-        const todoinput = document.getElementById("todoinput")
-        const addbutton = document.getElementById("addbutton")
-        const doing = document.getElementById("doing")
-        const completed = document.getElementById("completed")
-
-        function saveTasks() {
-            localStorage.setItem("tasks", JSON.stringify(tasks))
-        }
-
-        function renderTasks() {
-            doing.innerHTML = ""
-            completed.innerHTML = ""
-
-            for (const task of tasks) {
-                const newElement = document.createElement("p")
-                newElement.textContent = task.text
-                newElement.draggable = true
-                newElement.className = 'task'
-                const taskRow = document.createElement("div")
-                taskRow.className = "task-row"
-
-                if (task.completed) {
-                    const newDelButton = document.createElement("button")
-                    newDelButton.textContent = 'X'
-                    newDelButton.className = 'delbutton'
-                    const currentTask = task
-                    taskRow.appendChild(newDelButton)
-                    taskRow.appendChild(newElement)
-                    completed.appendChild(taskRow)
-                    newDelButton.addEventListener("click", () => {
-                        tasks = tasks.filter(task => task.id !== currentTask.id)
-                        saveTasks()
-                        renderTasks()
-                    })
-                } else {
-                    const newTickButton = document.createElement("button")
-                    newTickButton.textContent = '✓'
-                    newTickButton.className = 'tickbutton'
-                    const currentTask = task
-                    taskRow.appendChild(newTickButton)
-                    taskRow.appendChild(newElement)
-                    doing.appendChild(taskRow)
-                    newTickButton.addEventListener("click", () => {
-                        const task = tasks.find(task => task.id === currentTask.id)
-                        task.completed = true
-                        saveTasks()
-                        renderTasks()
-                        
-                    })
-                
-                
-                // newElement.addEventListener("drag", () => console.log('drag'))
-                }
-                
-            }
-        }
+<div class="app">
+    <body>
+        <h1>Todo List</h1>
+        <div class="input-row">
+            <input type="text" id="todoinput">
+            <button id="addbutton">Add</button>
+        </div>
         
-        renderTasks()
-        addbutton.addEventListener("click", () => {
-            const todotext = todoinput.value.trim()
-            if (todotext === '') {
-                return
+        <div id="categories">
+            <div class="category-container">
+                <h2 class="task-category">Doing</h2>
+                <div id="doing"></div>
+            </div>
+            <div class="category-container">
+                <h2 class="task-category">Completed</h2>
+                <div id="completed"></div>
+            </div>
+        </div>
+        
+
+        <script>
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || []
+
+            // document.body.style.backgroundColor = "beige"
+            const todoinput = document.getElementById("todoinput")
+            const addbutton = document.getElementById("addbutton")
+            const doing = document.getElementById("doing")
+            const completed = document.getElementById("completed")
+
+            function saveTasks() {
+                localStorage.setItem("tasks", JSON.stringify(tasks))
             }
-            todoinput.value = ''
-            tasks.push({id: Date.now(), text: todotext, completed: false})
-            saveTasks()
+
+            function renderTasks() {
+                doing.innerHTML = ""
+                completed.innerHTML = ""
+
+                for (const task of tasks) {
+                    const newElement = document.createElement("p")
+                    newElement.textContent = task.text
+                    // newElement.draggable = true
+                    newElement.className = 'task'
+                    const taskRow = document.createElement("div")
+                    taskRow.className = "task-row"
+
+                    if (task.completed) {
+                        newElement.className = 'task completed-task'
+                        const newDelButton = document.createElement("button")
+                        newDelButton.textContent = 'X'
+                        newDelButton.className = 'delbutton'
+                        const currentTask = task
+                        taskRow.appendChild(newDelButton)
+                        taskRow.appendChild(newElement)
+                        completed.appendChild(taskRow)
+                        newDelButton.addEventListener("click", () => {
+                            tasks = tasks.filter(task => task.id !== currentTask.id)
+                            saveTasks()
+                            renderTasks()
+                        })
+                    } else {
+                        const newTickButton = document.createElement("button")
+                        newTickButton.textContent = '✓'
+                        newTickButton.className = 'tickbutton'
+                        const currentTask = task
+                        taskRow.appendChild(newTickButton)
+                        taskRow.appendChild(newElement)
+                        doing.appendChild(taskRow)
+                        newTickButton.addEventListener("click", () => {
+                            const task = tasks.find(task => task.id === currentTask.id)
+                            task.completed = true
+                            saveTasks()
+                            renderTasks()
+                            
+                        })
+                    
+                    
+                    // newElement.addEventListener("drag", () => console.log('drag'))
+                    }
+                    
+                }
+            }
+            
             renderTasks()
+            addbutton.addEventListener("click", () => {
+                const todotext = todoinput.value.trim()
+                if (todotext === '') {
+                    return
+                }
+                todoinput.value = ''
+                tasks.push({id: Date.now(), text: todotext, completed: false})
+                saveTasks()
+                renderTasks()
 
-        })
+            })
 
-    </script>
-</body>
+        </script>
+    </body>
+</div>
