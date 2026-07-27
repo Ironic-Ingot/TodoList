@@ -4,12 +4,22 @@
     <title>Todo List</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<div class="app">
-    <body>
+
+<body>
+    <div class="app">
         <h1>Todo List</h1>
         <div class="input-row">
             <input type="text" id="todoinput">
+            <input type="date" id="datePicker">
             <button id="addbutton">Add</button>
+            <!-- <label for="filter">Show:</label>
+
+            <select id="filter">
+                <option value="all">All</option>
+                <option value="doing">Doing</option>
+                <option value="completed">Completed</option>
+            </select> -->
+            
         </div>
         
         <div id="categories">
@@ -32,6 +42,7 @@
             const addbutton = document.getElementById("addbutton")
             const doing = document.getElementById("doing")
             const completed = document.getElementById("completed")
+            const datePicker = document.getElementById("datePicker")
 
             function saveTasks() {
                 localStorage.setItem("tasks", JSON.stringify(tasks))
@@ -85,14 +96,19 @@
                     
                 }
             }
-            
+        
             function putTask() {
-                const todotext = todoinput.value.trim()
+                let todotext = todoinput.value.trim()
+                const dueDate = datePicker.value
+                if (dueDate) {
+                    todotext = `${todotext}, Due:${dueDate}` //make dueDate appear only when rendering dont assign to text
+                }
+                
                 if (todotext === '') {
                     return
                 }
                 todoinput.value = ''
-                tasks.push({id: Date.now(), text: todotext, completed: false})
+                tasks.push({id: crypto.randomUUID(), createdAt: Date.now(), dueDate:dueDate, text: todotext, completed: false})
                 saveTasks()
                 renderTasks()
             }
@@ -107,7 +123,7 @@
                     putTask()
                 }
             })
-
         </script>
-    </body>
-</div>
+    </div>
+    
+</body>
