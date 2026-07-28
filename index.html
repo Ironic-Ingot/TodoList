@@ -7,31 +7,40 @@
 
 <body>
     <div class="app">
-        <h1>Todo List</h1>
-        <div class="input-row">
-            <input type="text" id="todoinput">
-            <input type="date" id="datePicker">
-            <button id="addbutton">Add</button>
-                <select id="sort" class="dropdown">
-                    <option value="createdAt">Date Created</option>
-                    <option value="dueDate">Due Date</option>
-                    <option value="test">test</option>
-                </select>
-                <select id="sort-order" class="dropdown">
-                    <option value="ascending">Ascending</option>
-                    <option value="descending">Descending</option>
-                    <option value="test">test</option>
-                </select>
+        <div id="top">
+            <h1>Todo List</h1>
+            <div class="input-row">
+                <input type="text" id="todoinput">
+                <input type="date" id="datePicker">
+                <button id="addbutton">Add</button>
+                    <select id="sort" class="dropdown">
+                        <option value="createdAt">Date Created</option>
+                        <option value="dueDate">Due Date</option>
+                        <option value="test">test</option>
+                    </select>
+                    <select id="sort-order" class="dropdown">
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
+                        <option value="test">test</option>
+                    </select>
+        </div>
+
         </div>
         
         <div id="categories">
             <div class="category-container">
                 <h2 class="task-category">Doing</h2>
-                <div id="doing"></div>
+                <div class="category-tasks">
+                    <div id="doing"></div>
+                </div>
+                
             </div>
             <div class="category-container">
                 <h2 class="task-category">Completed</h2>
-                <div id="completed"></div>
+                <div class="category-tasks">
+                    <div id="completed"></div>
+                </div>
+                
             </div>
         </div>
         
