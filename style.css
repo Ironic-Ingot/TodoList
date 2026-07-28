@@ -4,9 +4,10 @@ html {
 
 .app {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
     flex-direction: column;
-    width: min(90%, 70%);
+    width: 60%;
+    resize: both;
     margin: 0.111rem auto;
     padding: 1.111rem;
     background-color:rgb(250, 231, 187);
@@ -22,10 +23,11 @@ select {
 }
 
 body {
-    background-color: beige;
+    background-color: rgb(232, 220, 191);
 }
 
-h1 {
+#title {
+    display: flex;
     font-size: 3rem;
     max-height: fit-content;
     color: rgb(104, 84, 47);
@@ -35,6 +37,7 @@ h1 {
     width: fit-content;
     padding: 0.167rem;
     box-shadow: 0 2px 0.23rem rgb(0 0 0 / 15%);
+    align-self: center;
 }
 
 button:active {
@@ -43,10 +46,20 @@ button:active {
 
 .input-row {
     display: flex;
+    gap: 1rem;
+}
+
+#userinput,
+#sorters {
+    display: flex;
     width: 100%;
     background-color: hsl(40, 92%, 79%);
     border-radius: 8px;
     box-shadow: 0 2px 0.23rem rgb(0 0 0 / 15%);
+}
+
+#sorters {
+    width: fit-content;
 }
 
 .task-category {
@@ -69,6 +82,39 @@ button:active {
     border-radius: 8px;
     box-shadow: 0 2px 0.23rem rgb(0 0 0 / 15%);
     overflow-wrap: anywhere;
+    width: fit-content;
+}
+
+.task-row:hover {
+    .date {
+        display: unset;
+        opacity: 1;
+    }
+}
+
+/* .tickbutton,
+.delbutton {
+    align-self: baseline ;
+} */
+
+.date {
+    padding: 0.556rem 0.778rem;
+    margin: 0.444rem 0;
+    background-color: #d1e9b4;
+    font-family: sans-serif;
+    border-radius: 8px;
+    box-shadow: 0 2px 0.23rem rgb(0 0 0 / 15%);
+    /* overflow-wrap: anywhere; */
+    width: fit-content;
+    /* display: none; */
+    opacity: 0.6;
+    transition: 0.4s;
+}
+
+.task-info {
+    display: flex;
+    flex-direction: column;
+    /* background-color: #777; */
 }
 
 #datePicker {
@@ -250,6 +296,15 @@ label[for="filter"] {
     #categories {
         flex-direction: column;
     }
+
+    #userinput {
+        flex-wrap: wrap;
+        width: min-content;
+    }
+
+    #todoinput {
+        max-width: fit-content;
+    }
 }
 @media (orientation: landscape) and (max-height: 700px) {
     html {
@@ -277,11 +332,22 @@ label[for="filter"] {
 
     .input-row {
         flex-direction: column;
-        width: 100%;
+        width: fit-content;
     }
 
     .category-container {
         max-height: none;
         min-width: 0;
+        
     }
+
+    #userinput {
+        flex-wrap: wrap;
+        width: min-content;
+    }
+
+    #todoinput {
+        max-width: fit-content;
+    }
+
 }

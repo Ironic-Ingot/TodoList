@@ -8,11 +8,15 @@
 <body>
     <div class="app">
         <div id="top">
-            <h1>Todo List</h1>
+            <h1 id="title">Todo List</h1>
             <div class="input-row">
-                <input type="text" id="todoinput">
-                <input type="date" id="datePicker">
-                <button id="addbutton">Add</button>
+                <div id="userinput">
+                    <input type="text" id="todoinput">
+                    <input type="date" id="datePicker">
+                    <button id="addbutton">Add</button>
+                </div>
+
+                <div id="sorters">
                     <select id="sort" class="dropdown">
                         <option value="createdAt">Date Created</option>
                         <option value="dueDate">Due Date</option>
@@ -23,6 +27,8 @@
                         <option value="descending">Descending</option>
                         <option value="test">test</option>
                     </select>
+                </div>
+
         </div>
 
         </div>
@@ -78,8 +84,12 @@
                     tasks.sort((a, b) => {
                         if (!a.dueDate) return 1*order
                         if (!b.dueDate) return -1*order
-
-                        return a.dueDate.localeCompare(b.dueDate)*order
+                        if (a.dueDate > b.dueDate) {
+                            return 1*order
+                        } else {
+                            return -1*order
+                        }
+                        return 
                     })
                 }
 
@@ -89,10 +99,15 @@
                     }
                     const newElement = document.createElement("p")
                     newElement.textContent = task.text
+                    
                     // newElement.draggable = true
+
                     newElement.className = 'task'
                     const taskRow = document.createElement("div")
                     taskRow.className = "task-row"
+                    const taskInfo = document.createElement("div")
+                    taskInfo.className = "task-info"
+                    
 
                     if (task.completed) {
                         newElement.className = 'task completed-task'
@@ -101,7 +116,8 @@
                         newDelButton.className = 'delbutton'
                         const currentTask = task
                         taskRow.appendChild(newDelButton)
-                        taskRow.appendChild(newElement)
+                        taskInfo.appendChild(newElement)
+                        taskRow.appendChild(taskInfo)
                         completed.appendChild(taskRow)
                         newDelButton.addEventListener("click", () => {
                             tasks = tasks.filter(task => task.id !== currentTask.id)
@@ -115,7 +131,8 @@
                         newTickButton.className = 'tickbutton'
                         const currentTask = task
                         taskRow.appendChild(newTickButton)
-                        taskRow.appendChild(newElement)
+                        taskInfo.appendChild(newElement)
+                        taskRow.appendChild(taskInfo)
                         doing.appendChild(taskRow)
                         newTickButton.addEventListener("click", () => {
                             const task = tasks.find(task => task.id === currentTask.id)
@@ -128,23 +145,26 @@
                     
                     // newElement.addEventListener("drag", () => console.log('drag'))
                     }
-                    
+                    if (task.dueDate) {
+                        const newDate = document.createElement("p")
+                        const dueDate = new Date(task.dueDate)
+                        newDate.className = 'date'
+                        newDate.textContent = `Due: ${dueDate.getDate()}-${dueDate.getMonth()+1}-${dueDate.getFullYear()}`
+                        taskInfo.appendChild(newDate)
+                        // taskRow.appendChild(newDate)
+                    }
                 }
             }
         
             function putTask() {
-                let todotext = todoinput.value.trim()
-                const dueDate = datePicker.value
+                const todotext = todoinput.value.trim()
+                const [year, month, day] = datePicker.value.split("-")
+                const dueDate = new Date(year, month - 1, day)
                 if (todotext === '') {
                     return
                 }
-                if (dueDate) {
-                    todotext = `${todotext}, Due:${dueDate}` //make dueDate appear only when rendering dont assign to text
-                }
-                
-
                 todoinput.value = ''
-                tasks.push({id: crypto.randomUUID(), createdAt: Date.now(), dueDate:dueDate, text: todotext, completed: false})
+                tasks.push({id: crypto.randomUUID(), createdAt: Date.now(), dueDate:dueDate.getTime(), text: todotext, completed: false})
                 saveTasks()
                 renderTasks()
             }
