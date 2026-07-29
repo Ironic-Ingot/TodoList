@@ -3,16 +3,21 @@
 <head>
     <title>Todo List</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
+    <label class="switch">
+        <input type="checkbox" id="themeSwitch">
+        <span class="slider"></span>
+    </label>
     <div class="app">
         <div id="top">
             <h1 id="title">Todo List</h1>
             <div class="input-row">
                 <div id="userinput">
                     <input type="text" id="todoinput">
-                    <input type="date" id="datePicker">
+                    <input type="date" id="inputdatePicker">
                     <button id="addbutton">Add</button>
                 </div>
 
@@ -59,10 +64,13 @@
             const addbutton = document.getElementById("addbutton")
             const doing = document.getElementById("doing")
             const completed = document.getElementById("completed")
-            const datePicker = document.getElementById("datePicker")
+            const datePicker = document.getElementById("inputdatePicker")
+            const themeSwitch = document.getElementById("themeSwitch")
             const sorter = document.getElementById("sort")
             const sorterorder = document.getElementById("sort-order")
             let order = 1
+
+            themeSwitch.checked = localStorage.getItem("theme") === "dark"
 
             function saveTasks() {
                 localStorage.setItem("tasks", JSON.stringify(tasks))
@@ -82,8 +90,8 @@
                     })
                 } else if (sortby === 'dueDate') {
                     tasks.sort((a, b) => {
-                        if (!a.dueDate) return 1*order
-                        if (!b.dueDate) return -1*order
+                        if (!a.dueDate) return 1
+                        if (!b.dueDate) return -1
                         if (a.dueDate > b.dueDate) {
                             return 1*order
                         } else {
@@ -94,9 +102,6 @@
                 }
 
                 for (const task of tasks) {
-                    if (sortby === 'dueDate' && !task.dueDate) {
-                        continue
-                    }
                     const newElement = document.createElement("p")
                     newElement.textContent = task.text
                     
@@ -146,12 +151,35 @@
                     // newElement.addEventListener("drag", () => console.log('drag'))
                     }
                     if (task.dueDate) {
+                        const newDateDiv = document.createElement("div")
+                        const newDatePicker = document.createElement("input")
                         const newDate = document.createElement("p")
                         const dueDate = new Date(task.dueDate)
+                        newDateDiv.className = "task-date"
+                        newDatePicker.type = "date"
+                        newDatePicker.className = "task-date-picker"
                         newDate.className = 'date'
                         newDate.textContent = `Due: ${dueDate.getDate()}-${dueDate.getMonth()+1}-${dueDate.getFullYear()}`
-                        taskInfo.appendChild(newDate)
-                        // taskRow.appendChild(newDate)
+                        newDateDiv.appendChild(newDatePicker)
+                        newDateDiv.appendChild(newDate)
+                        const timeLeft = dueDate.getTime() - Date.now()
+                        const oneWeek = 7 * 24 * 60 * 60 * 1000
+
+                        if (timeLeft < 0) {
+                            newDateDiv.classList.add("overdue")
+                        } else if (timeLeft <= oneWeek) {
+                            newDateDiv.classList.add("due-soon")
+                        }
+
+                        taskInfo.appendChild(newDateDiv)
+                        newDatePicker.addEventListener("change", () => {
+                            const [year, month, day] = newDatePicker.value.split("-")
+                            const dueDate = new Date(year, month - 1, day)
+                            task.dueDate = dueDate.getTime()
+                            saveTasks()
+                            renderTasks()
+                        })
+
                     }
                 }
             }
@@ -191,6 +219,19 @@
                     order = -1
                 }
                 renderTasks()
+            })
+
+            if (themeSwitch.checked) {
+                document.body.classList.add("dark")
+            }
+
+            themeSwitch.addEventListener("change", () => {
+                document.body.classList.toggle("dark", themeSwitch.checked)
+
+                localStorage.setItem(
+                    "theme",
+                    themeSwitch.checked ? "dark" : "light"
+                )
             })
         </script>
     </div>
